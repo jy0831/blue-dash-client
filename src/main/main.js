@@ -3,7 +3,7 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import { fileURLToPath } from 'url'
 import { config } from 'dotenv'
-
+import { query } from "./mariadb.js";
 import updater from "electron-updater";
 const { autoUpdater } = updater;
 import log from "electron-log";
@@ -24,7 +24,7 @@ async function createWindow() {
       preload: path.join(__dirname, preloadPath),
       contextIsolation: true,
       nodeIntegration: false,
-      devTools: true,
+      devTools: false,
       webSecurity: true
       
     },
@@ -37,7 +37,7 @@ async function createWindow() {
     win.webContents.openDevTools();
   } else {
     win.loadFile(path.join(__dirname, renderPath));
-    win.webContents.openDevTools();
+    // win.webContents.openDevTools();
   }
   ipcMain.on('max-window', () => {
     win.maximize();
@@ -49,6 +49,29 @@ async function createWindow() {
     win.minimize();
   })
 }
+ipcMain.handle('getData:date', async (e, data) => {
+  console.log(data);
+  
+  const queryStr = `
+    with staticViwers as (
+      select ts.NAME, count(vs.ID) as STATIC_VIWERS, tb.BROADCAST_DATE from tb_daily_view_scores vs
+      left join tb_users tu on vs.USER_ID = tu.ID
+      left join tb_broadcasts tb on vs.BROADCAST_ID = tb.ID
+      left join tb_streamers ts on ts.ID = tb.STREAMER_ID
+      where tb.BROADCAST_DATE = '${data}' and vs.TOTAL_VIEW_TIME > (tb.DURATION/2) 
+      group by ts.NAME
+    )
+    select ts.NAME, count(vs.ID) as VIWERS, sv.static_viwers as STATIC_VIWERS, tb.BROADCAST_DATE from tb_daily_view_scores vs
+    left join tb_users tu on vs.USER_ID = tu.ID
+    left join tb_broadcasts tb on vs.BROADCAST_ID = tb.ID
+    left join tb_streamers ts on ts.ID = tb.STREAMER_ID
+    left join staticViwers sv on sv.NAME = ts.NAME
+    where tb.BROADCAST_DATE = '${data}'
+    group by ts.NAME;
+  `;
+  const result = await query(queryStr);
+  return result;
+})
 app.on('ready', () => {
   // 메인 창 생성
   createWindow();

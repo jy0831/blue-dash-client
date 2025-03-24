@@ -5,10 +5,9 @@
     "name": "생초매"
   },
   "private": true,
-  "version": "1.0.1",
+  "version": "1.0.2",
   "type": "module",
-  "main": "src/main/main.js",
-
+  "main": "main.js",
   "scripts": {
     "dev": "vite --mode dev --config vite.config.local.js",
     "build:renderer": "vite build --mode prod --config vite.config.js",
@@ -40,11 +39,15 @@
       "package.json"
     ],
     "win": {
-      "target": "nsis"
+      "target": "nsis",
+      "icon": "./src/renderer/public/bluejump_2.ico"
     },
     "nsis": {
       "oneClick": false,
-      "allowToChangeInstallationDirectory": true
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "BlueDash"
     },
     "publish": [
       {
@@ -59,6 +62,7 @@
     "dotenv": "^16.4.7",
     "electron-log": "^5.3.2",
     "electron-updater": "^6.3.9",
+    "mariadb": "^3.4.0",
     "sass": "^1.86.0",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0"

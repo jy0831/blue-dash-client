@@ -12,14 +12,14 @@
                 <img v-else src="../assets/icons/arrow_back.svg" alt="">
                 <img class="side-logo" :class="isHide ? 'hide' : ''" src="../assets/images/cropped-image.png" alt="">
             </div>
-            <div class="side-item" :class="{ selected: route.path == '/dashboard' }">
+            <router-link to="/dashboard" class="side-item" :class="{ selected: route.path == '/dashboard' }" @click="movePage('/dashboard')">
                 <img src="../assets/icons/dashboard.svg" alt="">
-                <div v-if="isVisibleText" @click="() => router.push('/dashboard')">대쉬보드</div>
-            </div>
-            <div class="side-item">
-                <img src="../assets/icons/bar_chart.svg" alt="">
-                <div v-if="isVisibleText">테스트</div>
-            </div>
+                <div v-if="isVisibleText" >대쉬보드</div>
+            </router-link>
+            <router-link to="/test" class="side-item" :class="{ selected: route.path == '/test' }">
+                <img src="../assets/icons/bar_chart.svg" alt="" @click="movePage('/test')">
+                <div v-if="isVisibleText" >테스트</div>
+            </router-link>
         </div>
         <div class="app-body">
             <router-view :key="route.path"></router-view>
@@ -50,6 +50,9 @@ const test2 = (e) => {
     }
     e.stopPropagation();
     
+}
+const movePage = (path) => {
+    router.push(path);
 }
 </script>
 
@@ -92,6 +95,8 @@ const test2 = (e) => {
     flex-wrap: nowrap;
     align-items: center;
     gap: 8px;
+    text-decoration: none;
+    color: #000000;
     >img {
         width: 25px;
         height: 25px;
@@ -99,6 +104,8 @@ const test2 = (e) => {
     >div {
         font-size: 20px;
         font-weight: 600;
+        user-select: none;
+        -webkit-user-select: none;
     }
     &.selected {
         background-color: #8DD8EB;

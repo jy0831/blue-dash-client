@@ -16,3 +16,6 @@ body {
 html, body, #app {
     height: 100%;
 }
+.page-body {
+    padding: 20px;
+}

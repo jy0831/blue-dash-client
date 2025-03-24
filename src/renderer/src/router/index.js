@@ -1,5 +1,6 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory, createWebHashHistory } from 'vue-router'
 import DashBoard from "../pages/DashBoard.vue";
+import Test from "../pages/Test.vue";
 
 const routes = [
   {
@@ -18,11 +19,16 @@ const routes = [
     path: '/dashboard',
     name: 'DashBoard',
     component: DashBoard
-  }
+  },
+  {
+    path: '/test',
+    name: 'Test',
+    component: Test
+  },
 ]
 
 const router = createRouter({
-  history: createWebHistory(`${__ENV.VITE_APP_URL}:${__ENV.VITE_APP_PORT}`),
+  history: createWebHashHistory(),
   routes
 })
 
