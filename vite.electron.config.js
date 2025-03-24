@@ -23,11 +23,6 @@ export default defineConfig((mode) => {
       electron({
         main: {
           entry: 'src/main/main.js',
-          vite: {
-            build: {
-              watch: {}
-            }
-          }
         },
         preload: {
           input: 'src/preload/preload.js'
