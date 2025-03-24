@@ -1,0 +1,57 @@
+{
+  "name": "blue-dash-client",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "main": "src/main/main.js",
+  "scripts": {
+    "dev": "vite --mode dev --config vite.config.local.js",
+    "build:renderer": "vite build --config vite.config.js",
+    "build:main": "vite build --config vite.electron.config.js",
+    "build": "npm run build:renderer && npm run build:main",
+    "dist": "npm run build && electron-builder"
+  },
+  "build": {
+    "appId": "com.yourcompany.bluedash",
+    "productName": "BlueDash",
+    "files": [
+      {
+        "from": "dist-renderer",
+        "to": "renderer",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "dist-electron",
+        "to": ".",
+        "filter": [
+          "main.js",
+          "preload.mjs"
+        ]
+      },
+      "package.json"
+    ],
+    "win": {
+      "target": "nsis"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "sass": "^1.86.0",
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.3",
+    "cross-env": "^7.0.3",
+    "electron": "^35.0.3",
+    "electron-builder": "^25.1.8",
+    "vite": "^6.2.0",
+    "vite-plugin-electron": "^0.29.0"
+  }
+}
