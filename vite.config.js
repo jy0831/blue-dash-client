@@ -14,6 +14,7 @@ export default defineConfig(({ mode }) => {
       port: env.parsed.VITE_APP_PORT
     },
     root: path.resolve(__dirname, 'src/renderer'),
+    base: "./",
     build: {
       outDir: path.resolve(__dirname, 'dist-renderer'),
       emptyOutDir: true

@@ -1,17 +1,22 @@
 {
   "name": "blue-dash-client",
+  "author": {
+    "email": "hamachi271@gmail.com",
+    "name": "생초매"
+  },
   "private": true,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
-  "main": "main.js",
+  "main": "src/main/main.js",
 
   "scripts": {
     "dev": "vite --mode dev --config vite.config.local.js",
-    "build:renderer": "vite build --config vite.config.js",
-    "build:main": "vite build --config vite.electron.config.js",
+    "build:renderer": "vite build --mode prod --config vite.config.js",
+    "build:main": "vite build --mode prod --config vite.electron.config.js",
     "build": "yarn build:renderer && yarn build:main",
     "dist": "yarn build",
-    "dist:build": "electron-builder --win --publish always"
+    "dist:build": "yarn build && electron-builder --win",
+    "dist:publish": "electron-builder --win --publish always"
   },
   "build": {
     "appId": "com.yourcompany.bluedash",
@@ -40,7 +45,15 @@
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true
-    }
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "jy0831",
+        "repo": "blue-dash-client",
+        "private": true
+      }
+    ]
   },
   "dependencies": {
     "dotenv": "^16.4.7",
