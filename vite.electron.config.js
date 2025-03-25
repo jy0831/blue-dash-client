@@ -2,7 +2,7 @@
 import { build, defineConfig } from 'vite'
 import path from 'path'
 import electron from 'vite-plugin-electron/simple'
-
+import { config } from 'dotenv'
 export default defineConfig((mode) => {
   // build: {
   //   outDir: 'dist-electron',
@@ -16,8 +16,6 @@ export default defineConfig((mode) => {
   //     external: ['electron', 'path', 'fs', 'url']
   //   }
   // },
-  // const env = config({ path: `.env.${mode}` });
-  // console.log('🔧 Loaded env:', env)
   return {
     plugins: [
       electron({

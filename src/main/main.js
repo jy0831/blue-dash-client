@@ -12,19 +12,22 @@ import path from 'path'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-config({ path: path.join(__dirname, `../../.env.${process.env.NODE_ENV}`)})
 const isDev = !app.isPackaged;
 const preloadPath = isDev ? '../preload/preload.js' : 'preload.mjs';
 const renderPath = isDev ? '../renderer/index.html' : 'renderer/index.html';
+const envPath = isDev ? '../../.env.prod' : '.env.prod';
+config({ path: path.join(__dirname, envPath)})
 async function createWindow() {
   const win = new BrowserWindow({
     width: 1024,
+    minWidth: 475,
     height: 768,
+    minHeight: 400,
     webPreferences: {
       preload: path.join(__dirname, preloadPath),
       contextIsolation: true,
       nodeIntegration: false,
-      devTools: false,
+      devTools: true,
       webSecurity: true
       
     },
@@ -33,10 +36,10 @@ async function createWindow() {
   // console.log('###LOG: ', app.isPackaged);
   
   if (isDev) {
-    win.loadURL(`${process.env.VITE_APP_URL}:${process.env.VITE_APP_PORT}`);
+    await win.loadURL(`${process.env.VITE_APP_URL}:${process.env.VITE_APP_PORT}`);
     win.webContents.openDevTools();
   } else {
-    win.loadFile(path.join(__dirname, renderPath));
+    await win.loadFile(path.join(__dirname, renderPath));
     // win.webContents.openDevTools();
   }
   ipcMain.on('max-window', () => {
@@ -48,6 +51,7 @@ async function createWindow() {
   ipcMain.on('min-window', () => {
     win.minimize();
   })
+  return win;
 }
 ipcMain.handle('getData:date', async (e, data) => {
   console.log(data);
@@ -72,10 +76,38 @@ ipcMain.handle('getData:date', async (e, data) => {
   const result = await query(queryStr);
   return result;
 })
-app.on('ready', () => {
+app.on('ready', async () => {
   // 메인 창 생성
-  createWindow();
-  
+  await createWindow();
+  log.info(process.env);
+  log.info(process.env.GH_TOKEN);
+  autoUpdater.on('checking-for-update', () => {
+    log.info('업데이트 확인 중...');
+    BrowserWindow.getAllWindows()[0]?.webContents.send('update:checking')
+  });
+  autoUpdater.on('update-available', (info) => {
+    log.info('업데이트가 가능합니다.');
+    BrowserWindow.getAllWindows()[0]?.webContents.send('update:available')
+  });
+  autoUpdater.on('update-not-available', (info) => {
+    log.info('현재 최신버전입니다.');
+    BrowserWindow.getAllWindows()[0]?.webContents.send('update:not-available')
+  });
+  autoUpdater.on('error', (err) => {
+    log.info('에러가 발생하였습니다. 에러내용 : ' + err);
+    BrowserWindow.getAllWindows()[0]?.webContents.send('update:error', err)
+  });
+  autoUpdater.on('download-progress', (progressObj) => {
+    let log_message = "다운로드 속도: " + progressObj.bytesPerSecond;
+    log_message = log_message + ' - 현재 ' + progressObj.percent + '%';
+    log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')';
+    BrowserWindow.getAllWindows()[0]?.webContents.send('update:progress', progressObj)
+    log.info(log_message);
+  })
+  autoUpdater.on('update-downloaded', (info) => {
+    log.info('업데이트가 완료되었습니다.');
+    BrowserWindow.getAllWindows()[0]?.webContents.send('update:downloaded')
+  });
   // 자동 업데이트 등록
   autoUpdater.checkForUpdates();
 });
@@ -84,32 +116,6 @@ app.on('ready', () => {
 app.on('window-all-closed', () => {
   app.quit();
 });
-autoUpdater.on('checking-for-update', () => {
-  log.info('업데이트 확인 중...');
-  BrowserWindow.getAllWindows()[0]?.webContents.send('update:checking')
-});
-autoUpdater.on('update-available', (info) => {
-  log.info('업데이트가 가능합니다.');
-  BrowserWindow.getAllWindows()[0]?.webContents.send('update:available')
-});
-autoUpdater.on('update-not-available', (info) => {
-  log.info('현재 최신버전입니다.');
-  BrowserWindow.getAllWindows()[0]?.webContents.send('update:not-available')
-});
-autoUpdater.on('error', (err) => {
-  log.info('에러가 발생하였습니다. 에러내용 : ' + err);
-  BrowserWindow.getAllWindows()[0]?.webContents.send('update:error', err)
-});
-autoUpdater.on('download-progress', (progressObj) => {
-  let log_message = "다운로드 속도: " + progressObj.bytesPerSecond;
-  log_message = log_message + ' - 현재 ' + progressObj.percent + '%';
-  log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')';
-  BrowserWindow.getAllWindows()[0]?.webContents.send('update:progress', progressObj)
-  log.info(log_message);
-})
-autoUpdater.on('update-downloaded', (info) => {
-  log.info('업데이트가 완료되었습니다.');
-  BrowserWindow.getAllWindows()[0]?.webContents.send('update:downloaded')
-});
+
 
 

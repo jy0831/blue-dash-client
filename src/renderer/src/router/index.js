@@ -1,14 +1,10 @@
 import { createRouter, createWebHistory, createWebHashHistory } from 'vue-router'
 import DashBoard from "../pages/DashBoard.vue";
 import Test from "../pages/Test.vue";
+import LodingPage from '../pages/LodingPage.vue'
 
 const routes = [
-  {
-    path: '/index.html',
-    redirect: {
-      path: '/dashboard'
-    }
-  },
+  
   {
     path: '/',
     redirect: {
@@ -18,12 +14,32 @@ const routes = [
   {
     path: '/dashboard',
     name: 'DashBoard',
-    component: DashBoard
+    component: DashBoard,
+    meta: {
+      useLayout: true
+    }
   },
   {
     path: '/test',
     name: 'Test',
-    component: Test
+    component: Test,
+    meta: {
+      useLayout: true
+    }
+  },
+  {
+    path: '/lodingpage',
+    name: 'LodingPage',
+    component: LodingPage,
+    meta: {
+      useLayout: false
+    }
+  },
+  {
+    path: '/*',
+    redirect: {
+      path: '/dashboard'
+    }
   },
 ]
 

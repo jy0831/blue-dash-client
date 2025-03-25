@@ -5,9 +5,9 @@
     "name": "생초매"
   },
   "private": true,
-  "version": "1.0.2",
+  "version": "1.0.3",
   "type": "module",
-  "main": "main.js",
+  "main": "src/main/main.js",
   "scripts": {
     "dev": "vite --mode dev --config vite.config.local.js",
     "build:renderer": "vite build --mode prod --config vite.config.js",
@@ -18,7 +18,7 @@
     "dist:publish": "electron-builder --win --publish always"
   },
   "build": {
-    "appId": "com.yourcompany.bluedash",
+    "appId": "com.electron.bluedash",
     "productName": "BlueDash",
     "files": [
       {
@@ -36,6 +36,7 @@
           "preload.mjs"
         ]
       },
+      ".env.prod",
       "package.json"
     ],
     "win": {

@@ -10,7 +10,7 @@
             <div class="side-btn" @click="test">
                 <img v-if="isHide" src="../assets/icons/arrow_forward.svg" alt="">
                 <img v-else src="../assets/icons/arrow_back.svg" alt="">
-                <img class="side-logo" :class="isHide ? 'hide' : ''" src="../assets/images/cropped-image.png" alt="">
+                <!-- <img class="side-logo" :class="isHide ? 'hide' : ''" src="../assets/images/cropped-image.png" alt=""> -->
             </div>
             <router-link to="/dashboard" class="side-item" :class="{ selected: route.path == '/dashboard' }" @click="movePage('/dashboard')">
                 <img src="../assets/icons/dashboard.svg" alt="">
@@ -68,34 +68,48 @@ const movePage = (path) => {
     overflow-y: auto;
 }
 .side-bar {
-    background-color: #B1E5F2;
-    height: 100%;
+    // background-color: #B1E5F2;
+    background-color: var(--cg-1);
+    height: calc(100% - 10px);
     width: 200px;
     position: relative;
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
+    align-items: center;
     transition: width 0.2s;
+    box-shadow: 0.5px 0 10px 0px #00000040;
+    padding-inline: 10px;
+    padding-block: 5px;
+    gap: 5px;
+
 }
 .side-bar.hide {
     width: 50px;
-    >.side-item>div {
-        display: none;
+    padding-inline: 5px;
+    >.side-item {
+        >div {
+            display: none;
+        }
+    }
+    >.side-btn {
+        justify-content: center;
     }
 }
 .side-item {
-    width: calc(100% - 10px);
-    padding-block: 12px;
-    font: 20px bold;
-    padding-left: 10px;
-    transition: all .25s;
     cursor: pointer;
+    padding-block: 8px;
+    padding-inline: 10px;
+    width: calc(100% - 20px);
+    border-radius: 10px;
     display: flex;
-    flex-direction: row;
     flex-wrap: nowrap;
+    flex-direction: row;
     align-items: center;
     gap: 8px;
+    transition: all .25s;
     text-decoration: none;
+    font: 20px bold;
     color: #000000;
     >img {
         width: 25px;
@@ -106,25 +120,29 @@ const movePage = (path) => {
         font-weight: 600;
         user-select: none;
         -webkit-user-select: none;
+        // color: #4ca8ff;
     }
     &.selected {
-        background-color: #8DD8EB;
+        // background-color: #8DD8EB;
+        background-color: #c9d9e8;
     }
 }
 .side-item:hover {
-    background-color: #8DD8EB;
+    // background-color: #8DD8EB;
+    background-color: var(--cg-1_9);
 }
 .side-btn {
     position: relative;
     top: 0px;
     right: 0px;
     padding-block: 5px;
-    padding-inline: 12px;
+    padding-inline: 10px;
     cursor: pointer;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
-    background-color: #8DD8EB;
+    width: calc(100% - 10px);
+    // background-color: #8DD8EB;
     gap: 5px;
     >img {
         height: 25px;
@@ -139,6 +157,6 @@ const movePage = (path) => {
 }
 .app-body {
     width: 100%;
-    background-color: #f6f7f8;
+    background-color: var(--cg-0);
 }
 </style>

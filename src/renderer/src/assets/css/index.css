@@ -1,3 +1,4 @@
+@import url('./colors.css');
 @font-face {
   font-family: 'Interop';
   src: url('https://raw.githubusercontent.com/payw-org/Interop/main/web/fonts/Interop-Regular.woff2')
@@ -9,6 +10,8 @@
   font-display: block;
 }
 
+
+
 body {
     margin: 0px;
     font-family: Interop;
@@ -16,6 +19,6 @@ body {
 html, body, #app {
     height: 100%;
 }
-.page-body {
+.app-body {
     padding: 20px;
 }

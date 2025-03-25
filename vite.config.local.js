@@ -21,6 +21,7 @@ export default defineConfig(({ mode }) => {
     define: {
       __ENV: env.parsed
     },
+    base: 'src/main',
     plugins: [
       vue(),
       electron({
