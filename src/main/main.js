@@ -144,7 +144,7 @@ ipcMain.handle('getData:Live', async (e, id) => {
 });
 app.on('ready', async () => {
   // 메인 창 생성
-  await createWindow();
+  const win = await createWindow();
   autoUpdater.on('checking-for-update', () => {
     log.info('업데이트 확인 중...');
     BrowserWindow.getAllWindows()[0]?.webContents.send('update:checking')
@@ -170,6 +170,8 @@ app.on('ready', async () => {
   })
   autoUpdater.on('update-downloaded', (info) => {
     log.info('업데이트가 완료되었습니다.');
+    win.close();
+    app.quit();
     BrowserWindow.getAllWindows()[0]?.webContents.send('update:downloaded')
   });
   // 자동 업데이트 등록
