@@ -82,7 +82,7 @@ const movePage = (path) => {
     padding-inline: 10px;
     padding-block: 5px;
     gap: 5px;
-
+    z-index: 1;
 }
 .side-bar.hide {
     width: 50px;
@@ -158,5 +158,7 @@ const movePage = (path) => {
 .app-body {
     width: 100%;
     background-color: var(--cg-0);
+    position: relative;
+    overflow-y: auto;
 }
 </style>

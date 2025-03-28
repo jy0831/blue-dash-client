@@ -5,9 +5,9 @@
     "name": "생초매"
   },
   "private": true,
-  "version": "1.0.3",
+  "version": "1.0.4",
   "type": "module",
-  "main": "src/main/main.js",
+  "main": "main.js",
   "scripts": {
     "dev": "vite --mode dev --config vite.config.local.js",
     "build:renderer": "vite build --mode prod --config vite.config.js",
