@@ -30,14 +30,19 @@
 <script setup>
 import { useRoute, useRouter } from 'vue-router'
 import WindowHeader from './WindowHeader.vue';
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 const route = useRoute();
 const router = useRouter();
 const isHide = ref(false);
 const isVisibleText = ref(true);
+const sideBarEvent = new CustomEvent('side-bar-hide', {});
+const observer = new ResizeObserver(() => {
+    window.dispatchEvent(sideBarEvent)
+});
 const test = (e) => {
     isHide.value = !isHide.value;
 }
+
 const test2 = (e) => {
     if (e.propertyName !== 'width') {
         return;
@@ -54,6 +59,10 @@ const test2 = (e) => {
 const movePage = (path) => {
     router.push(path);
 }
+onMounted(() => {
+    const sidebar = document.querySelector('.side-bar');
+    observer.observe(sidebar);
+});
 </script>
 
 <style lang="scss" scoped>
@@ -160,5 +169,6 @@ const movePage = (path) => {
     background-color: var(--cg-0);
     position: relative;
     overflow-y: auto;
+    overflow-x: hidden;
 }
 </style>

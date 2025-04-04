@@ -23,5 +23,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
   }),
   getDataByDate: (callback) => ipcRenderer.send('getData:date', (event, data) => {
     callback(data);
+  }),
+  getDataViewersByStreamer: (callback) => ipcRenderer.send('getData:ViewersByStreamer', (event) => {
+    callback();
   })
 });
