@@ -41,7 +41,7 @@ async function createWindow() {
     win.webContents.openDevTools();
   } else {
     await win.loadFile(path.join(__dirname, renderPath));
-    win.webContents.openDevTools();
+    // win.webContents.openDevTools();
   }
   ipcMain.on('max-window', () => {
     win.maximize();

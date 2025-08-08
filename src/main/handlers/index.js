@@ -106,20 +106,31 @@ ipcMain.handle('getData:ViewersByStreamer', async (e) => {
 
 ipcMain.handle('getData:ViewersMtricsByDate', async (e, range) => {
   console.log('range: ', range);
-  
+  if (range.type) {
+    range.start = `str_to_date('${range.start}', '%Y-%m')`;
+    range.end = `DATE_ADD(DATE_ADD('${range.end}-01', interval 1 MONTH), interval - 1 DAY)`;
+  } else {
+    range.start = `'${range.start}'`;
+    range.end = `'${range.end}'`;
+  }
   const queryStr = `
     select ts.name, tb.BROADCAST_DATE, count(vs.id) as count from tb_daily_view_scores vs
     left join tb_broadcasts tb on vs.BROADCAST_ID = tb.ID
     left join tb_streamers ts ON tb.STREAMER_ID = ts.ID
-    ${ range ? `where tb.BROADCAST_DATE >= '${range.start}' and tb.BROADCAST_DATE <= '${range.end}'` : ''}
+    ${ range ? `where tb.BROADCAST_DATE >= ${range.start} and tb.BROADCAST_DATE <= ${range.end}` : ''}
+    ${ range.matricType ? `` : `AND vs.TOTAL_VIEW_TIME >= (tb.DURATION / 2)` }
     group by ts.NAME, tb.BROADCAST_DATE;
   `;
+  console.log(queryStr);
+  
   const queryStr2 = `
     select MIN(tb.BROADCAST_DATE ) as start, Max(tb.BROADCAST_DATE) as "end" from tb_broadcasts tb
-    ${ range ? `where tb.BROADCAST_DATE >= '${range.start}' and tb.BROADCAST_DATE <= '${range.end}'` : ''}
+    ${ range ? `where tb.BROADCAST_DATE >= ${range.start} and tb.BROADCAST_DATE <= ${range.end}` : ''}
     ;
   `;
   const dataArr = await query(queryStr);
+  console.log(dataArr);
+  
   const dateArr = await query(queryStr2);
   if (!Array.isArray(dataArr)) {
     return null;
